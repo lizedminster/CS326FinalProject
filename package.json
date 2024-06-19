@@ -1,0 +1,35 @@
+{
+  "name": "hw03-persistence-and-hints",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "license": "AGPL-version-3.0",
+  "private": false,
+  "engines": {
+    "node": ">= 14.0.0",
+    "npm": ">= 6.0.0"
+  },
+  "homepage": "",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "bugs": "",
+  "keywords": [],
+  "author": {
+    "name": "Elizabeth Edminster",
+    "email": "eedminster@umass.edu",
+    "spireid": "34366145"
+  },
+  "contributors": [],
+  "scripts": {
+    "start": "http-server src -p 3000 -c-1 -o -s",
+    "submit": "node js/submit.js"
+  },
+  "dependencies": {
+    "archiver": "^6.0.1",
+    "http-server": "^14.1.1",
+    "wordwrapjs": "^5.1.0"
+  }
+}
