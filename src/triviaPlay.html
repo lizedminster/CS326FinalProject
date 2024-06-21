@@ -18,7 +18,7 @@
         <h1>Trivia Playpage</h1>
         <div id="tPlay" class="tPlay">
             <div id="tQ" class="col">
-                <p>
+                <p id="question">
                     QUESTION
                 </p>
             </div>
@@ -27,10 +27,11 @@
                     <label for="answer">Enter Here: </label><input type="text" id="answer" />
                 </div>
                 <div id="tRA">
-                    <label for="answer">Correct Answer: </label><input type="text" id="answer" readonly="readonly" />
+                    <label for="rightAnswer">Correct Answer: </label><input type="text" id="rightAnswer" readonly="readonly" />
                 </div>
-                <div id="submit">
-                    <input type="button" value="Submit" id="submitT" />
+                <div id="buttons">
+                    <input type="button" value="Submit" id="submit" />
+                    <input type="button" value="Next Question" id="next" />
                 </div>
                 <div id="coinsAddedTitle">Worth: <span id="coinsAdded"></span></div>
             </div>
