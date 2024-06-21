@@ -1,1 +1,2 @@
-console.log("hello World")
+var userCoins = 100;
+document.getElementById('coins').innerText = userCoins;

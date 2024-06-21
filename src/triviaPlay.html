@@ -6,14 +6,38 @@
     <link rel="stylesheet" href="app.css" />
 </head>
 
-<body>
-    <nav id="triviaNav">
-        <a href="app.html" id="homepage">Homepage</a>
-        <a href="triviaHome.html" id="triviaHomepage">Trivia Homepage</a>
-        <a href="triviaPlay.html" id="triviaPlaypage">Trivia Playpage</a>
+<body class="t">
+    <div id="coinsTitle">Coins: <span id="coins"></span></div>
+    <nav id="triviaNav" class="t">
+        <a href="app.html" id="homepage" class="t">Homepage</a>
+        <a href="triviaHome.html" id="triviaHomepage" class="t">Trivia Homepage</a>
+        <a href="triviaPlay.html" id="triviaPlaypage" class="t">Trivia Playpage</a>
     </nav>
 
-    <h1>Trivia Playpage</h1>
+    <div id="tContent">
+        <h1>Trivia Playpage</h1>
+        <div id="tPlay" class="tPlay">
+            <div id="tQ" class="col">
+                <p>
+                    QUESTION
+                </p>
+            </div>
+            <div id="tA" class="col">
+                <div id="tUA">
+                    <label for="answer">Enter Here: </label><input type="text" id="answer" />
+                </div>
+                <div id="tRA">
+                    <label for="answer">Correct Answer: </label><input type="text" id="answer" readonly="readonly" />
+                </div>
+                <div id="submit">
+                    <input type="button" value="Submit" id="submitT" />
+                </div>
+                <div id="coinsAddedTitle">Worth: <span id="coinsAdded"></span></div>
+            </div>
+        </div>
+        
+    </div>
+
 </body>
 
 </html>
