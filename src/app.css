@@ -17,3 +17,13 @@ nav {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 }
+
+a {
+  background-color: rgb(160, 160, 160);
+  padding: 10px;
+  text-align: center;
+  color: black;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  text-decoration: none;
+}
