@@ -1,15 +1,19 @@
+//once the document has loaded...
 document.addEventListener('DOMContentLoaded', function () {
+    //set up coins (sometimes refered to as points)
     let userCoins = 100;
     if (window.localStorage.getItem('points')) {
         userCoins = window.localStorage.getItem('points');
     }
     document.getElementById('coins').innerText = userCoins;
 
+    //give names to the 4 js required pages (sign in has it's own and trivia home has no js)
     const triviaPlay = document.getElementById("trivia");
     const gachaPlay = document.getElementById("gacha");
     const gachaHome = document.getElementById("gachaHome");
     const homeHTML = document.getElementById("homeHTML");
 
+    //in the home page
     if (homeHTML) {
         //for right now, this is just for playtesting. These are temporary
         const resetCoins = document.getElementById("resetCoins")
@@ -25,6 +29,8 @@ document.addEventListener('DOMContentLoaded', function () {
             window.localStorage.setItem('gacha', JSON.stringify(gachaList));
         });
     }
+
+    //in the trivia play page
     if (triviaPlay) {
         //Trivia
         console.log("Trivia Page");
@@ -38,8 +44,10 @@ document.addEventListener('DOMContentLoaded', function () {
         answer.addEventListener("keyup", validateTextInput);
         next.addEventListener("click", nextQuestion);
 
+        //add persistency 
         restoreState();
 
+        //this function checks if the text input is a number. If it is, it saves it to the local Storage. If not, it throws an alert)
         function validateTextInput() {
             const answerVal = answer.value;
 
@@ -51,7 +59,9 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-
+        //This function checks if the user's input matches the desired input.
+        //If it is correct, it makes the box green, generates a new question, and adds points (coins)
+        //Else, it makes the box red. 
         function checkInput() {
             //This will be where I will draw from the backend for data. For now, it will be static
             const storedQuestion = window.localStorage.getItem('question');
@@ -80,6 +90,8 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
+        //After the user is done reviewing the correct answer (or if they just want to skip a question) they can click the next button to generate a new question
+        //It then resets the text boxes so that new answers can be submitted
         function nextQuestion() {
             //This will be where I will draw from the backend for data.
             const rightAnswer = document.getElementById('rightAnswer');
@@ -96,6 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         }
 
+        //this function just takes the text from local storage that the user was inputting & the question itself to maintain persistency 
         function restoreState() {
             const storedAnswer = window.localStorage.getItem('answer');
             if (storedAnswer) {
@@ -111,9 +124,12 @@ document.addEventListener('DOMContentLoaded', function () {
         };
     }
 
+    //in the gacha playpage
     if (gachaPlay) {
         const drawButton = document.getElementById("draw");
         const gacha = document.getElementById("questionMark");
+
+        //The gacha list is the list of all gacha that the user has collected
         let gachaList = [];
         if (window.localStorage.getItem('gacha')) {
             gachaList = JSON.parse(window.localStorage.getItem('gacha'));
@@ -123,22 +139,41 @@ document.addEventListener('DOMContentLoaded', function () {
 
         drawButton.addEventListener("click", drawGacha);
 
+        //When the user chooses to draw for a gacha, they (as of right now) get to add a number gacha to their array. 
+        //25 coins are taken away from their coin total. 
         function drawGacha() {
+            let img = document.getElementById('questionMark');
             let x = Math.floor(Math.random() * 10);
             //When I add the backend, it will instead add a gacha object to the list instead of a simple number
-            gachaList.push(x);
-            window.localStorage.setItem('gacha', JSON.stringify(gachaList));
-            console.log(gachaList);
-            userCoins = parseInt(userCoins)
-            userCoins -= 25;
-            window.localStorage.setItem('points', userCoins);
-            document.getElementById('coins').innerText = userCoins;
+            if (!gachaList.includes(x) && parseInt(userCoins)>=25) {
+                gachaList.push(x);
+                window.localStorage.setItem('gacha', JSON.stringify(gachaList));
+                console.log(gachaList);
+                userCoins = parseInt(userCoins)
+                userCoins -= 25;
+                window.localStorage.setItem('points', userCoins);
+                document.getElementById('coins').innerText = userCoins;
+                img.src = "https://images.ctfassets.net/jwea2w833xe7/1g04n3YqB2LvwqoC42vvh3/c942e40b7d73e2147b7943b005a0ea38/card-deepdive-img3.png"
+            }else if (parseInt(userCoins)>=25){
+                console.log("duplicate!");
+                img.src = "https://cdn11.bigcommerce.com/s-p79ialmurd/images/stencil/500x659/products/1647/5734/DUP_CARDS__18956.1581623417.png?c=2"
+                userCoins = parseInt(userCoins)
+                userCoins -= 10;
+            }else{
+                console.log("broke :(");
+                img.src = "https://static.vecteezy.com/system/resources/previews/021/248/602/original/distressed-woman-with-empty-wallet-png.png"
+            }
         }
     }
 
+    //in the gacha homepage
     if (gachaHome) {
+
+        //grid is the parent element
         let grid = document.getElementById("grid");
         const x = JSON.parse(window.localStorage.getItem('gacha'));
+
+        //this takes all of the available gacha and puts them into a display grid 
         Object.keys(x).forEach(card => {
             let newCard = document.createElement("div");
             newCard.textContent = x[card];
