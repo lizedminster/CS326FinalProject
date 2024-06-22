@@ -134,8 +134,8 @@ div.col{
 }
 
 #questionMark{
-  height: 400px;
-  width: 325px;
+  height: 450px;
+  width: 350px;
 }
 
 #coin{
@@ -148,4 +148,45 @@ div.col{
   flex-direction: column;
   align-items: center;
   gap: 20px;
+}
+
+#triviaHome{
+  border-radius: 0px;
+  background-color: #FCFCFC;
+  color: black;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#draw{
+  border-radius: 0px;
+  background-color: #FCFCFC;
+  color: black;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  outline: 0px;
+}
+
+#grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 5 columns with equal width */
+  gap: 20px; /* Gap between grid items */
+}
+
+/* Style for each card (newCard div) */
+#grid div {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  width: 140px;
+  height: 160px;
+}
+
+#demonstrationImg{
+  padding: 10px;
+  height: 400px;
+  width: 700px;
 }
