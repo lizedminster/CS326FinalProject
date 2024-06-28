@@ -3,6 +3,10 @@ import * as url from "url";
 import * as db from "./db.js";
 import * as fsp from "fs/promises";
 
+//Each Gacha has an Id, a Name and an Img associated with it. 
+//I want devs to be able to use DevPage to create new Gacha
+
+//This function makes new gacha
 async function createGacha(response, id, name, img) {
     if (!name || !id || !img) {
         response.writeHead(400, headerFields);
@@ -24,6 +28,7 @@ async function createGacha(response, id, name, img) {
     }
 }
 
+//This function should print the requested gacha in response
 async function readGacha(response, _id) {
     try {
         const gacha = await db.loadGacha(_id);
@@ -37,6 +42,7 @@ async function readGacha(response, _id) {
     }
 }
 
+//this function should find a gacha with a given ID and give it a new name & img
 async function updateGacha(response, _id, newName, newImg) {
     try {
         const gacha = await db.loadGacha(_id);
@@ -53,6 +59,8 @@ async function updateGacha(response, _id, newName, newImg) {
     }
 }
 
+
+//this function should delete the gacha
 async function deleteGacha(response, _id) {
     try {
         const gacha = await db.loadGacha(_id);
@@ -88,6 +96,38 @@ async function basicServer(request, response) {
         return parts[parts.length - 1];
     };
 
+    if (isMatch("PUT", "/update")) {
+        await updateGacha(response, options.name);
+        return;
+    }
+
+    if (isMatch("GET", "/read")) {
+        await readGacha(response, options.name);
+        return;
+    }
+
+    if (isMatch("DELETE", "/delete")) {
+        await deleteGacha(response, options.name);
+        return;
+    }
+
+    if (isMatch("POST", "/create")) {
+        await createGacha(response, options.name);
+        return;
+    }
+
+
+    //this is just all stuff from assignment 17 that I wasn't sure if I needed. 
+    if (
+        isEqual("GET", "") ||
+        isEqual("GET", "/") ||
+        isEqual("GET", "/client") ||
+        isEqual("GET", "/client/") ||
+        isEqual("GET", "/client/DevPage.html")
+    ) {
+        sendStaticFile("/client/DevPage.html");
+        return;
+    }
     // Get the content type based on the file type
     const getContentType = (urlpath = request.url) =>
         ({
@@ -112,37 +152,6 @@ async function basicServer(request, response) {
         }
     };
 
-    if (isMatch("PUT", "/update")) {
-        await updateGacha(response, options.name);
-        return;
-    }
-
-    if (isMatch("GET", "/read")) {
-        await readGacha(response, options.name);
-        return;
-    }
-
-    if (isMatch("DELETE", "/delete")) {
-        await deleteGacha(response, options.name);
-        return;
-    }
-
-    if (isMatch("POST", "/create")) {
-        await createGacha(response, options.name);
-        return;
-    }
-
-    if (
-        isEqual("GET", "") ||
-        isEqual("GET", "/") ||
-        isEqual("GET", "/client") ||
-        isEqual("GET", "/client/") ||
-        isEqual("GET", "/client/DevPage.html")
-    ) {
-        sendStaticFile("/client/DevPage.html");
-        return;
-    }
-
     if (
         (isMatch("GET", "") || isMatch("GET", "/")) &&
         (hasSuffix(".html") || hasSuffix(".css") || hasSuffix(".js"))
@@ -152,6 +161,7 @@ async function basicServer(request, response) {
     }
 }
 
+//this is supposed to run the server on port 3260
 http.createServer(basicServer).listen(3260, () => {
     console.log("Server started on port 3260");
 });
