@@ -5,7 +5,10 @@ const signIn = document.getElementById("signIn");
         const password = document.getElementById("password")
 
         submit.addEventListener('click', function () {
-            if (username.value === "liz" && password.value === "123") {
+            if (username.value === "DevPage" && password.value === "xxx123") {
+                window.location.href = 'client/DevPage.html';
+                console.log("request went through");
+            }else if(username.value === "a" && password.value === "b"){
                 window.location.href = 'app.html';
                 console.log("request went through");
             }else{
