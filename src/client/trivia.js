@@ -1,4 +1,4 @@
-[
+const trivia = [
     {
         "question": "What is 2 * 1?",
         "correct": "2",
@@ -35,3 +35,5 @@
         "points": "25"
     }
 ]
+
+export { trivia }

@@ -1,5 +1,5 @@
 //once the document has loaded...
-//import * as db from "./db.js";
+import { trivia } from "./trivia.js";
 document.addEventListener('DOMContentLoaded', function () {
     const URL = "http://localhost:3260";
 
@@ -47,13 +47,11 @@ document.addEventListener('DOMContentLoaded', function () {
         submit.addEventListener("click", checkInput);
         answer.addEventListener("keyup", validateTextInput);
         next.addEventListener("click", nextQuestion);
-        let questions = [];
-        async function loadQuestions() {
-            const response = await fetch('trivia.json');
-            questions = await response.json();
+        let questions = trivia;
+        const questionBox = document.getElementById('question');
+        if(questionBox.innerText === "QUESTION"){
             nextQuestion();
         }
-        loadQuestions();
         //add persistency 
         restoreState();
 
@@ -135,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const questionBox = document.getElementById('question');
                 questionBox.innerText = questionObj.question;
             }
-        };
+        }
     }
 
     //in the gacha playpage
@@ -157,26 +155,34 @@ document.addEventListener('DOMContentLoaded', function () {
         //25 coins are taken away from their coin total. 
         async function drawGacha() {
             if (parseInt(userCoins) < 25) {
-                console.log("broke :(");
+                console.log("Not enough coins.");
                 gacha.src = "https://static.vecteezy.com/system/resources/previews/021/248/602/original/distressed-woman-with-empty-wallet-png.png";
                 return;
             }
-
+        
             try {
                 const response = await fetch(`${URL}/random`);
+                //draw a random gacha
                 const randomGacha = await response.json();
-
+                console.log("gacha list:" + gachaList);
+                //if the gacha is not in gacha list...
                 if (!gachaList.find(g => g._id === randomGacha._id)) {
+                    //add it to gacha list
                     gachaList.push(randomGacha);
-                    window.localStorage.setItem('gacha', JSON.stringify(gachaList));
                     userCoins = parseInt(userCoins) - 25;
+                    //update coins
                     window.localStorage.setItem('points', userCoins);
+                    //add the gacha to the list of owned gachas
+                    window.localStorage.setItem('gacha', JSON.stringify(gachaList));
                     document.getElementById('coins').innerText = userCoins;
                     gacha.src = randomGacha.img;
+                    console.log("gacha list:" + gachaList[0].img);
                 } else {
-                    console.log("duplicate!");
+                    console.log("Duplicate gacha.");
+                    userCoins = parseInt(userCoins) - 10; // Adjust coins deduction for duplicates
+                    document.getElementById('coins').innerText = userCoins;
+                    window.localStorage.setItem('points', userCoins);
                     gacha.src = "https://cdn11.bigcommerce.com/s-p79ialmurd/images/stencil/500x659/products/1647/5734/DUP_CARDS__18956.1581623417.png?c=2";
-                    userCoins = parseInt(userCoins) - 10;
                 }
             } catch (error) {
                 console.error("Failed to draw gacha:", error);
@@ -193,10 +199,14 @@ document.addEventListener('DOMContentLoaded', function () {
         const x = JSON.parse(window.localStorage.getItem('gacha'));
 
         //this takes all of the available gacha and puts them into a display grid 
-        Object.keys(x).forEach(card => {
+        Object.keys(gachaList).forEach(card => {
             let newCard = document.createElement("div");
-            newCard.textContent = x[card];
-
+            console.log(card.name);
+            let img = document.createElement("img");
+            img.src = gachaList[card].img; 
+            img.alt = gachaList[card].name;
+    
+            newCard.appendChild(img);
             grid.appendChild(newCard);
         });
     }

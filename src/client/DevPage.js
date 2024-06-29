@@ -2,6 +2,7 @@ const createBtn = document.getElementById("createBtnG");
 const readBtn = document.getElementById("readBtnG");
 const updateBtn = document.getElementById("updateBtnG");
 const deleteBtn = document.getElementById("deleteBtnG");
+const destroyBtn = document.getElementById("destroyBtnG");
 
 const gac = document.getElementById("gacha")
 
@@ -11,7 +12,7 @@ const gachaImg = document.getElementById("gachaImg");
 
 const URL = "http://localhost:3260";
 console.log("x");
-async function createGacha() {
+async function createGachaStart() {
     const id = gachaID.value;
     const name = gachaName.value;
     const img = gachaImg.value;
@@ -28,7 +29,7 @@ async function createGacha() {
 
     console.log("Gacha Created");
 }
-async function readGacha() {
+async function readGachaStart() {
 
     const id = gachaID.value;
     if (!id) {
@@ -45,7 +46,7 @@ async function readGacha() {
     console.log("Gacha Read");
 
 }
-async function updateGacha() {
+async function updateGachaStart() {
     const id = gachaID.value;
     const name = gachaName.value;
     const img = gachaImg.value;
@@ -62,7 +63,7 @@ async function updateGacha() {
 
     console.log("Gacha Updated");
 }
-async function deleteGacha() {
+async function deleteGachaStart() {
     const id = gachaID.value;
     if (!id) {
         alert("Gacha id is required!");
@@ -87,7 +88,28 @@ async function deleteGacha() {
     }
 }
 
-createBtn.addEventListener("click", createGacha);
-readBtn.addEventListener("click", readGacha);
-updateBtn.addEventListener("click", updateGacha);
-deleteBtn.addEventListener("click", deleteGacha);
+async function destroyGachaStart() {
+    console.log("destruction imminent")
+    try {
+        const response = await fetch(`${URL}/destroy`, {
+            method: "DELETE"
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+        }
+
+        const data = await response.text();
+        gac.innerHTML = data;
+        console.log("Database was Destroyed >:)");
+    } catch (error) {
+        console.error("Destruction failed:", error);
+        alert("Database destruction was unsuccessful :(");
+    }
+}
+
+createBtn.addEventListener("click", createGachaStart);
+readBtn.addEventListener("click", readGachaStart);
+updateBtn.addEventListener("click", updateGachaStart);
+deleteBtn.addEventListener("click", deleteGachaStart);
+destroyBtn.addEventListener("click", destroyGachaStart)

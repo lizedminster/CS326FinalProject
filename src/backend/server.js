@@ -13,12 +13,18 @@ async function fetchRandomGacha(response) {
     try {
         const allGachas = await db.db.allDocs({ include_docs: true });
         const randomIndex = Math.floor(Math.random() * allGachas.total_rows);
+        
+        if (allGachas.rows.length === 0) {
+            throw new Error("No gacha found in the database.");
+        }
+        
         const randomGacha = allGachas.rows[randomIndex].doc;
-
+        console.log("selected gacha: "+ randomGacha);
         response.writeHead(200, headerFields);
         response.write(JSON.stringify(randomGacha));
         response.end();
     } catch (err) {
+        console.error("Error fetching random gacha:", err);
         response.writeHead(500, headerFields);
         response.write(JSON.stringify({ error: "Internal Server Error" }));
         response.end();
@@ -32,15 +38,15 @@ async function createGacha(response, id, name, img) {
         response.writeHead(400, headerFields);
         response.write("<h1>Gacha ID Required</h1>");
         response.end();
-    } else if(!img){
+    } else if (!img) {
         response.writeHead(400, headerFields);
         response.write("<h1>Gacha img Required</h1>");
         response.end();
-    }else if(!name){
+    } else if (!name) {
         response.writeHead(400, headerFields);
         response.write("<h1>Gacha name Required</h1>");
         response.end();
-    }else {
+    } else {
         try {
             console.log("a2")
             await db.saveGacha(id, name, img);
@@ -105,6 +111,18 @@ async function deleteGacha(response, id) {
     response.end();
 }
 
+async function destroyGacha(response){
+    try{
+        db.destroyDatabase();
+        response.writeHead(200, headerFields);
+        response.write(`<h1>Database Deleted >:)</h1>`);
+    }catch (err){
+        response.writeHead(404, headerFields);
+        response.write(`<h1>Server can't delete the database</h1>`);
+    }
+    response.end();
+}
+
 async function basicServer(request, response) {
     const parsedUrl = url.parse(request.url, true);
     const options = parsedUrl.query;
@@ -130,27 +148,32 @@ async function basicServer(request, response) {
 
     const getContentType = (urlpath = request.url) =>
         ({
-          html: "text/html",
-          css: "text/css",
-          js: "text/javascript",
+            html: "text/html",
+            css: "text/css",
+            js: "text/javascript",
         })[getSuffix(urlpath)] || "text/plain";
-    
-      const sendStaticFile = async (urlpath = request.url) => {
+
+    const sendStaticFile = async (urlpath = request.url) => {
         try {
-          // Read the file from the src/client folder and send it back to the client
-          const data = await fsp.readFile("src" + urlpath, "utf8");
-          response.writeHead(200, { "Content-Type": getContentType(urlpath) });
-          await response.write(data);
-          response.end();
-          return;
+            const filePath = "src" + urlpath;
+            const contentType = getContentType(urlpath);
+
+            await fsp.access(filePath);
+
+            const data = await fsp.readFile(filePath, "utf8");
+            response.writeHead(200, { "Content-Type": contentType });
+            response.write(data);
+            response.end();
+
+            //I was having errors so I tried my best to fix the static files for this
         } catch (err) {
-          response.writeHead(404, { "Content-Type": "text/plain" });
-          response.write("Not found: " + urlpath);
-          response.end();
-          return;
+            response.writeHead(404, { "Content-Type": "text/plain" });
+            response.write("Not found: " + urlpath);
+            response.end();
         }
-      };
-    
+    };
+
+
 
     if (isMatch("PUT", "/update")) {
         await updateGacha(response, options.id, options.name, options.img)
@@ -164,6 +187,11 @@ async function basicServer(request, response) {
 
     if (isMatch("DELETE", "/delete")) {
         await deleteGacha(response, options.id);
+        return;
+    }
+
+    if (isMatch("DELETE", "/destroy")) {
+        await destroyGacha(response);
         return;
     }
 
@@ -183,20 +211,20 @@ async function basicServer(request, response) {
         isEqual("GET", "/client") ||
         isEqual("GET", "/client/") ||
         isEqual("GET", "/client/DevPage.html")
-      ) {
+    ) {
         sendStaticFile("/client/DevPage.html");
         return;
-      }
-    
-      if (
+    }
+
+    if (
         (isMatch("GET", "") || isMatch("GET", "/")) &&
         (hasSuffix(".html") || hasSuffix(".css") || hasSuffix(".js"))
-      ) {
+    ) {
         sendStaticFile("/client" + request.url);
         return;
-      }
-      response.writeHead(405, { "Content-Type": "text/plain" });
-      response.end("Method Not Allowed");
+    }
+    response.writeHead(405, { "Content-Type": "text/plain" });
+    response.end("Method Not Allowed");
 }
 
 //this is supposed to run the server on port 3260
