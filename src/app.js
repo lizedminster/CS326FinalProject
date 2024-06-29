@@ -18,6 +18,8 @@ document.addEventListener('DOMContentLoaded', function () {
         //for right now, this is just for playtesting. These are temporary
         const resetCoins = document.getElementById("resetCoins")
         const resetGacha = document.getElementById("resetGacha")
+        const user = document.getElementById("userNames");
+        user.innerText = "Hello, " + window.localStorage.getItem("user") + "!";
 
         resetCoins.addEventListener("click", function () {
             userCoins = 100;
@@ -43,7 +45,13 @@ document.addEventListener('DOMContentLoaded', function () {
         submit.addEventListener("click", checkInput);
         answer.addEventListener("keyup", validateTextInput);
         next.addEventListener("click", nextQuestion);
-
+        let questions = [];
+        async function loadQuestions() {
+            const response = await fetch('trivia.json');
+            questions = await response.json();
+            nextQuestion();
+        }
+        loadQuestions();
         //add persistency 
         restoreState();
 
@@ -66,6 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
             //This will be where I will draw from the backend for data. For now, it will be static
             const storedQuestion = window.localStorage.getItem('question');
             const rightAnswer = document.getElementById('rightAnswer');
+            const coinsAdded = document.getElementById('coinsAdded');
             if (storedQuestion) {
                 const questionObj = JSON.parse(storedQuestion);
 
@@ -85,6 +94,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 rightAnswer.value = correct;
 
+                coinsAdded.innerText = points;
+
                 // Update displayed coins
                 document.getElementById('coins').innerText = userCoins;
             }
@@ -95,11 +106,12 @@ document.addEventListener('DOMContentLoaded', function () {
         function nextQuestion() {
             //This will be where I will draw from the backend for data.
             const rightAnswer = document.getElementById('rightAnswer');
-            const question = {
-                question: "Random number for now",
-                correct: Math.floor(Math.random() * 2) + 1,
-                points: 10
-            }
+            const questionIndex = Math.floor(Math.random() * questions.length);
+            const question = questions[questionIndex];
+
+            window.localStorage.setItem('question', JSON.stringify(question));
+            document.getElementById('question').innerText = question.question;
+            
             console.log(question.correct);
             window.localStorage.setItem('question', JSON.stringify(question));
             answer.style.backgroundColor = "white";
@@ -145,7 +157,7 @@ document.addEventListener('DOMContentLoaded', function () {
             let img = document.getElementById('questionMark');
             let x = Math.floor(Math.random() * 10);
             //When I add the backend, it will instead add a gacha object to the list instead of a simple number
-            if (!gachaList.includes(x) && parseInt(userCoins)>=25) {
+            if (!gachaList.includes(x) && parseInt(userCoins) >= 25) {
                 gachaList.push(x);
                 window.localStorage.setItem('gacha', JSON.stringify(gachaList));
                 console.log(gachaList);
@@ -154,12 +166,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 window.localStorage.setItem('points', userCoins);
                 document.getElementById('coins').innerText = userCoins;
                 img.src = "https://images.ctfassets.net/jwea2w833xe7/1g04n3YqB2LvwqoC42vvh3/c942e40b7d73e2147b7943b005a0ea38/card-deepdive-img3.png"
-            }else if (parseInt(userCoins)>=25){
+            } else if (parseInt(userCoins) >= 25) {
                 console.log("duplicate!");
                 img.src = "https://cdn11.bigcommerce.com/s-p79ialmurd/images/stencil/500x659/products/1647/5734/DUP_CARDS__18956.1581623417.png?c=2"
                 userCoins = parseInt(userCoins)
                 userCoins -= 10;
-            }else{
+            } else {
                 console.log("broke :(");
                 img.src = "https://static.vecteezy.com/system/resources/previews/021/248/602/original/distressed-woman-with-empty-wallet-png.png"
             }

@@ -39,6 +39,8 @@ async function createGacha(){
     console.log("Gacha Created")
 }
 async function readGacha(){
+
+    //don't worry about these. I'll implement them once create is fixed.
     
 }
 async function updateGacha(){

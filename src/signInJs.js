@@ -4,18 +4,30 @@ const signIn = document.getElementById("signIn");
         const username = document.getElementById("username");
         const password = document.getElementById("password")
 
+        let users = [];
+        async function loadUsers() {
+            const response = await fetch('signIn.json');
+            users = await response.json();
+        }
+        loadUsers();
+        
+
         submit.addEventListener('click', function () {
-            if (username.value === "DevPage" && password.value === "xxx123") {
+            if (username.value === "x" && password.value === "x") {
                 window.location.href = 'client/DevPage.html';
                 console.log("request went through");
-            }else if(username.value === "a" && password.value === "b"){
-                window.location.href = 'app.html';
-                console.log("request went through");
             }else{
-                username.style.backgroundColor = "red";
-                password.style.backgroundColor = "red";
-                username.value = "";
-                password.value = "";
+                const user = users.find(user => user.username === username.value);
+                if(user && user.password === password.value){
+                    window.location.href = 'app.html';
+                    console.log("request went through");
+                    window.localStorage.setItem("user", username.value)
+                }else{
+                    username.style.backgroundColor = "red";
+                    password.style.backgroundColor = "red";
+                    username.value = "";
+                    password.value = "";
+                }
             }
         })
     }
