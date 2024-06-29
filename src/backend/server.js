@@ -6,6 +6,8 @@ import * as fsp from "fs/promises";
 //Each Gacha has an Id, a Name and an Img associated with it. 
 //I want devs to be able to use DevPage to create new Gacha
 
+const headerFields = { "Content-Type": "text/html" };
+
 //This function makes new gacha
 async function createGacha(response, id, name, img) {
     if (!name || !id || !img) {
@@ -76,8 +78,9 @@ async function deleteGacha(response, _id) {
 }
 
 async function basicServer(request, response) {
-    const options = url.parse(request.url, true).query;
-
+    const parsedUrl = url.parse(request.url, true);
+    const options = parsedUrl.query;
+    const pathname = parsedUrl.pathname;
     // Check if the request method and path are equal to the given method and path
     const isEqual = (method, path) =>
         request.method === method && request.url === path;
@@ -96,8 +99,32 @@ async function basicServer(request, response) {
         return parts[parts.length - 1];
     };
 
+    const getContentType = (urlpath = request.url) =>
+        ({
+          html: "text/html",
+          css: "text/css",
+          js: "text/javascript",
+        })[getSuffix(urlpath)] || "text/plain";
+    
+      const sendStaticFile = async (urlpath = request.url) => {
+        try {
+          // Read the file from the src/client folder and send it back to the client
+          const data = await fsp.readFile("src" + urlpath, "utf8");
+          response.writeHead(200, { "Content-Type": getContentType(urlpath) });
+          response.write(data);
+          response.end();
+          return;
+        } catch (err) {
+          response.writeHead(404, { "Content-Type": "text/plain" });
+          response.write("Not found: " + urlpath);
+          response.end();
+          return;
+        }
+      };
+    
+
     if (isMatch("PUT", "/update")) {
-        await updateGacha(response, options.name);
+        await createGacha(response, options._id, options._name, options._img)
         return;
     }
 
@@ -116,49 +143,26 @@ async function basicServer(request, response) {
         return;
     }
 
-
-    //this is just all stuff from assignment 17 that I wasn't sure if I needed. 
     if (
         isEqual("GET", "") ||
         isEqual("GET", "/") ||
         isEqual("GET", "/client") ||
         isEqual("GET", "/client/") ||
         isEqual("GET", "/client/DevPage.html")
-    ) {
+      ) {
         sendStaticFile("/client/DevPage.html");
         return;
-    }
-    // Get the content type based on the file type
-    const getContentType = (urlpath = request.url) =>
-        ({
-            html: "text/html",
-            css: "text/css",
-            js: "text/javascript",
-        })[getSuffix(urlpath)] || "text/plain";
-
-    const sendStaticFile = async (urlpath = request.url) => {
-        try {
-            // Read the file from the src/client folder and send it back to the client
-            const data = await fsp.readFile("src" + urlpath, "utf8");
-            response.writeHead(200, { "Content-Type": getContentType(urlpath) });
-            response.write(data);
-            response.end();
-            return;
-        } catch (err) {
-            response.writeHead(404, { "Content-Type": "text/plain" });
-            response.write("Not found: " + urlpath);
-            response.end();
-            return;
-        }
-    };
-
-    if (
+      }
+    
+      if (
         (isMatch("GET", "") || isMatch("GET", "/")) &&
         (hasSuffix(".html") || hasSuffix(".css") || hasSuffix(".js"))
-    ) {
+      ) {
         sendStaticFile("/client" + request.url);
         return;
-    }
+      }
+      response.writeHead(405, { "Content-Type": "text/plain" });
+      response.end("Method Not Allowed");
 }
 
 //this is supposed to run the server on port 3260
