@@ -1,5 +1,5 @@
 {
-  "name": "hw03-persistence-and-hints",
+  "name": "CICS326 final project",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -24,14 +24,12 @@
   },
   "contributors": [],
   "scripts": {
-    "start": "http-server src -p 3000 -c-1 -o -s",
+    "start": "node src/backend/server.js",
     "submit": "node js/submit.js"
   },
   "dependencies": {
     "archiver": "^6.0.1",
-    "express": "4.17.1",
     "http-server": "^14.1.1",
-    "pouchdb": "^9.0.0",
-    "wordwrapjs": "^5.1.0"
+    "pouchdb": "^8.0.1"
   }
 }

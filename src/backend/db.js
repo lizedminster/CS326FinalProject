@@ -1,10 +1,12 @@
 import PouchDB from "pouchdb";
 
-const db = new PouchDB("counters");
+const db = new PouchDB("gacha");
 
 //This function takes in an Id, name, and Img, and then saves them in a gacha object
 export async function saveGacha(id, name, img) {
-    await db.put({ _id: id, _name: name, _img: img});
+    console.log('MADE IT TO DB')
+    await db.put({ id: id, name, img});
+    console.log('MADE IT FROM DB')
 }
 
 //obj in this case is the whole gacha. 
@@ -13,12 +15,12 @@ export async function modifyGacha(obj) {
 }
 
 //This function gets the gacha & then returns it. 
-export async function loadGacha(_id) {
-    const gacha = await db.get(_id);
+export async function loadGacha(id) {
+    const gacha = await db.get(id);
     return gacha;
 }
 
 //This function removes the gacha
-export async function removeGacha(_id) {
-    db.remove(_id);
+export async function removeGacha(id) {
+    db.remove(id);
   }

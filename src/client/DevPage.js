@@ -12,10 +12,11 @@ const gachaImg = document.getElementById("gachaImg");
 const URL = "http://localhost:3260";
 
 async function createGacha() {
+    console.log("x")
     const id = gachaID.value;
     const name = gachaName.value;
     const img = gachaImg.value;
-    if (!name) {
+    if (!id || !name || !img) {
         alert("Gacha name is required!")
         return;
     }
@@ -24,15 +25,13 @@ async function createGacha() {
     //Uncaught (in promise) 
     //TypeError: Failed to fetch
     // at HTMLButtonElement.createGacha (DevPage.js:28:30)
-
-    const response = await fetch(`${URL}/create?id=${id}&name=${name}&img=${img}`, {
+    console.log("x2")
+    const response = await fetch(`${URL}/create?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}&img=${encodeURIComponent(img)}`, {
         method: "POST"
     });
-    if (!response.ok) {
-        throw new Error(`Response status: ${response.status}`);
-    }
+    console.log("x3")
     const data = await response.text();
-
+    console.log("x4")
     gac.innerHTML = data;
 
     console.log("Gacha Created");
