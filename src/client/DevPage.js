@@ -10,7 +10,7 @@ const gachaName = document.getElementById("gachaName");
 const gachaImg = document.getElementById("gachaImg");
 
 const URL = "http://localhost:3260";
-
+console.log("x");
 async function createGacha() {
     const id = gachaID.value;
     const name = gachaName.value;

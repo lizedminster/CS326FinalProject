@@ -8,6 +8,23 @@ import * as fsp from "fs/promises";
 
 const headerFields = { "Content-Type": "text/plain" };
 
+//this function will draw a random gacha from the database
+async function fetchRandomGacha(response) {
+    try {
+        const allGachas = await db.db.allDocs({ include_docs: true });
+        const randomIndex = Math.floor(Math.random() * allGachas.total_rows);
+        const randomGacha = allGachas.rows[randomIndex].doc;
+
+        response.writeHead(200, headerFields);
+        response.write(JSON.stringify(randomGacha));
+        response.end();
+    } catch (err) {
+        response.writeHead(500, headerFields);
+        response.write(JSON.stringify({ error: "Internal Server Error" }));
+        response.end();
+    }
+}
+
 //This function makes new gacha
 async function createGacha(response, id, name, img) {
     console.log("a")
@@ -152,6 +169,11 @@ async function basicServer(request, response) {
 
     if (isMatch("POST", "/create")) {
         await createGacha(response, options.id, options.name, options.img);
+        return;
+    }
+
+    if (isMatch("GET", "/random")) {
+        await fetchRandomGacha(response);
         return;
     }
 

@@ -2,7 +2,7 @@
 //import * as db from "./db.js";
 document.addEventListener('DOMContentLoaded', function () {
     const URL = "http://localhost:3260";
-    
+
     //set up coins (sometimes refered to as points)
     let userCoins = 100;
     if (window.localStorage.getItem('points')) {
@@ -153,29 +153,34 @@ document.addEventListener('DOMContentLoaded', function () {
 
         drawButton.addEventListener("click", drawGacha);
 
-        //When the user chooses to draw for a gacha, they (as of right now) get to add a number gacha to their array. 
+        //When the user chooses to draw for a gacha, they recieve a random gacha from all available gacha
         //25 coins are taken away from their coin total. 
-        function drawGacha() {
-            let img = document.getElementById('questionMark');
-            let x = Math.floor(Math.random() * 10);
-            //When I add the backend, it will instead add a gacha object to the list instead of a simple number
-            if (!gachaList.includes(x) && parseInt(userCoins) >= 25) {
-                gachaList.push(x);
-                window.localStorage.setItem('gacha', JSON.stringify(gachaList));
-                console.log(gachaList);
-                userCoins = parseInt(userCoins)
-                userCoins -= 25;
-                window.localStorage.setItem('points', userCoins);
-                document.getElementById('coins').innerText = userCoins;
-                img.src = "https://images.ctfassets.net/jwea2w833xe7/1g04n3YqB2LvwqoC42vvh3/c942e40b7d73e2147b7943b005a0ea38/card-deepdive-img3.png"
-            } else if (parseInt(userCoins) >= 25) {
-                console.log("duplicate!");
-                img.src = "https://cdn11.bigcommerce.com/s-p79ialmurd/images/stencil/500x659/products/1647/5734/DUP_CARDS__18956.1581623417.png?c=2"
-                userCoins = parseInt(userCoins)
-                userCoins -= 10;
-            } else {
+        async function drawGacha() {
+            if (parseInt(userCoins) < 25) {
                 console.log("broke :(");
-                img.src = "https://static.vecteezy.com/system/resources/previews/021/248/602/original/distressed-woman-with-empty-wallet-png.png"
+                gacha.src = "https://static.vecteezy.com/system/resources/previews/021/248/602/original/distressed-woman-with-empty-wallet-png.png";
+                return;
+            }
+
+            try {
+                const response = await fetch(`${URL}/random`);
+                const randomGacha = await response.json();
+
+                if (!gachaList.find(g => g._id === randomGacha._id)) {
+                    gachaList.push(randomGacha);
+                    window.localStorage.setItem('gacha', JSON.stringify(gachaList));
+                    userCoins = parseInt(userCoins) - 25;
+                    window.localStorage.setItem('points', userCoins);
+                    document.getElementById('coins').innerText = userCoins;
+                    gacha.src = randomGacha.img;
+                } else {
+                    console.log("duplicate!");
+                    gacha.src = "https://cdn11.bigcommerce.com/s-p79ialmurd/images/stencil/500x659/products/1647/5734/DUP_CARDS__18956.1581623417.png?c=2";
+                    userCoins = parseInt(userCoins) - 10;
+                }
+            } catch (error) {
+                console.error("Failed to draw gacha:", error);
+                gacha.src = "https://static.vecteezy.com/system/resources/previews/021/248/602/original/distressed-woman-with-empty-wallet-png.png";
             }
         }
     }
