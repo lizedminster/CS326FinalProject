@@ -26,7 +26,7 @@ const trivia = [
     },
     {
         "question": "What is ln(e)?",
-        "correct": "4",
+        "correct": "1",
         "points": "25"
     },
     {

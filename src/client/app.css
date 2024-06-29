@@ -184,6 +184,11 @@ div.col{
   width: 140px;
   height: 160px;
 }
+#grid div img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
 
 #demonstrationImg{
   padding: 10px;

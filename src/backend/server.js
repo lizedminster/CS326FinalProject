@@ -25,8 +25,8 @@ async function fetchRandomGacha(response) {
         response.end();
     } catch (err) {
         console.error("Error fetching random gacha:", err);
-        response.writeHead(500, headerFields);
-        response.write(JSON.stringify({ error: "Internal Server Error" }));
+        response.writeHead(400, headerFields);
+        response.write(JSON.stringify({ error: "Unsuccessful Draw of Gacha" }));
         response.end();
     }
 }
@@ -118,7 +118,7 @@ async function destroyGacha(response){
         response.write(`<h1>Database Deleted >:)</h1>`);
     }catch (err){
         response.writeHead(404, headerFields);
-        response.write(`<h1>Server can't delete the database</h1>`);
+        response.write(`<h1>Server can't find the database</h1>`);
     }
     response.end();
 }

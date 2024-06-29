@@ -199,12 +199,12 @@ document.addEventListener('DOMContentLoaded', function () {
         const x = JSON.parse(window.localStorage.getItem('gacha'));
 
         //this takes all of the available gacha and puts them into a display grid 
-        Object.keys(gachaList).forEach(card => {
+        Object.keys(x).forEach(card => {
             let newCard = document.createElement("div");
-            console.log(card.name);
+            console.log("card " + card.name);
             let img = document.createElement("img");
-            img.src = gachaList[card].img; 
-            img.alt = gachaList[card].name;
+            img.src = x[card].img; 
+            img.alt = x[card].name;
     
             newCard.appendChild(img);
             grid.appendChild(newCard);
