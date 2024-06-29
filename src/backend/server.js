@@ -29,7 +29,7 @@ async function createGacha(response, id, name, img) {
             await db.saveGacha(id, name, img);
             console.log("a3")
             response.writeHead(200, headerFields);
-            response.write(`<h1>Gacha ${name} Created</h1>`);
+            response.write(`<h1>Gacha ${id} Created</h1>`);
             response.end();
             console.log("a4")
         } catch (err) {
@@ -47,7 +47,7 @@ async function readGacha(response, id) {
     try {
         const gacha = await db.loadGacha(id);
         response.writeHead(200, headerFields);
-        response.write(`<h1>Gacha id = ${gacha.id}, name = ${gacha.name}, img = ${gacha.img}</h1>`);
+        response.write(`<h1>Gacha id = ${gacha._id}, name = ${gacha.name}, img = ${gacha.img}</h1>`);
         response.end();
     } catch (err) {
         response.writeHead(404, headerFields);
@@ -59,12 +59,12 @@ async function readGacha(response, id) {
 //this function should find a gacha with a given ID and give it a new name & img
 async function updateGacha(response, id, newName, newImg) {
     try {
-        const gacha = await db.loadGacha(id);
+        let gacha = await db.loadGacha(id);
         gacha.name = newName;
         gacha.img = newImg;
         await db.modifyGacha(gacha);
         response.writeHead(200, headerFields);
-        response.write(`<h1>Gacha ${gacha.id} Updated</h1>`);
+        response.write(`<h1>Gacha ${gacha._id} Updated</h1>`);
         response.end();
     } catch (err) {
         response.writeHead(404, headerFields);
@@ -78,13 +78,14 @@ async function updateGacha(response, id, newName, newImg) {
 async function deleteGacha(response, id) {
     try {
         const gacha = await db.loadGacha(id);
+        await console.log(gacha)
         response.writeHead(200, headerFields);
-        response.write(`<h1>Gacha ${gacha.id} Deleted</h1>`);
+        response.write(`<h1>Gacha ${gacha._id} Deleted</h1>`);
         response.end();
         db.removeGacha(id);
     } catch (err) {
         response.writeHead(404, headerFields);
-        response.write(`<h1>Gacha ${name} Not Found</h1>`);
+        response.write(`<h1>Gacha ${id} Not Found</h1>`);
         response.end();
     }
 }

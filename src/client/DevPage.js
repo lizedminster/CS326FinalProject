@@ -85,7 +85,7 @@ async function deleteGacha() {
     //Uncaught (in promise) 
     //TypeError: Failed to fetch
     // at HTMLButtonElement.createGacha (DevPage.js:28:30)
-    const response = await fetch(`${URL}/delete?id=${encodeURIComponent(id)}}`, {
+    const response = await fetch(`${URL}/delete?id=${encodeURIComponent(id)}`, {
         method: "DELETE"
     });
     const data = await response.text();

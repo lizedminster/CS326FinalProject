@@ -1,6 +1,6 @@
 import PouchDB from "pouchdb";
 
-const db = new PouchDB("gacha");
+const db = new PouchDB("gachas");
 
 //This function takes in an Id, name, and Img, and then saves them in a gacha object
 export async function saveGacha(id, name, img) {
