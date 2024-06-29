@@ -19,11 +19,7 @@ async function createGacha() {
         alert("Gacha name is required!")
         return;
     }
-    //something about this does not work. This is the error:
-    //DevPage.js:28
-    //Uncaught (in promise) 
-    //TypeError: Failed to fetch
-    // at HTMLButtonElement.createGacha (DevPage.js:28:30)
+    
     const response = await fetch(`${URL}/create?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}&img=${encodeURIComponent(img)}`, {
         method: "POST"
     });
@@ -39,12 +35,8 @@ async function readGacha() {
         alert("Gacha id is required!")
         return;
     }
-    //something about this does not work. This is the error:
-    //DevPage.js:28
-    //Uncaught (in promise) 
-    //TypeError: Failed to fetch
-    // at HTMLButtonElement.createGacha (DevPage.js:28:30)
-    const response = await fetch(`${URL}/read?id=${encodeURIComponent(id)}}`, {
+    
+    const response = await fetch(`${URL}/read?id=${encodeURIComponent(id)}`, {
         method: "GET"
     });
     const data = await response.text();
@@ -61,11 +53,7 @@ async function updateGacha() {
         alert("Gacha name is required!")
         return;
     }
-    //something about this does not work. This is the error:
-    //DevPage.js:28
-    //Uncaught (in promise) 
-    //TypeError: Failed to fetch
-    // at HTMLButtonElement.createGacha (DevPage.js:28:30)
+    
     const response = await fetch(`${URL}/update?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}&img=${encodeURIComponent(img)}`, {
         method: "PUT"
     });
@@ -77,21 +65,26 @@ async function updateGacha() {
 async function deleteGacha() {
     const id = gachaID.value;
     if (!id) {
-        alert("Gacha id is required!")
+        alert("Gacha id is required!");
         return;
     }
-    //something about this does not work. This is the error:
-    //DevPage.js:28
-    //Uncaught (in promise) 
-    //TypeError: Failed to fetch
-    // at HTMLButtonElement.createGacha (DevPage.js:28:30)
-    const response = await fetch(`${URL}/delete?id=${encodeURIComponent(id)}`, {
-        method: "DELETE"
-    });
-    const data = await response.text();
-    gac.innerHTML = data;
 
-    console.log("Gacha Deleted");
+    try {
+        const response = await fetch(`${URL}/delete?id=${encodeURIComponent(id)}`, {
+            method: "DELETE"
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+        }
+
+        const data = await response.text();
+        gac.innerHTML = data;
+        console.log("Gacha Deleted");
+    } catch (error) {
+        console.error("Delete failed:", error);
+        alert("Gacha delete was unsuccessful :(");
+    }
 }
 
 createBtn.addEventListener("click", createGacha);

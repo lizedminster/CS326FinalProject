@@ -1,12 +1,14 @@
 //once the document has loaded...
+//import * as db from "./db.js";
 document.addEventListener('DOMContentLoaded', function () {
+    const URL = "http://localhost:3260";
+    
     //set up coins (sometimes refered to as points)
     let userCoins = 100;
     if (window.localStorage.getItem('points')) {
         userCoins = window.localStorage.getItem('points');
     }
     document.getElementById('coins').innerText = userCoins;
-
     //give names to the 4 js required pages (sign in has it's own and trivia home has no js)
     const triviaPlay = document.getElementById("trivia");
     const gachaPlay = document.getElementById("gacha");

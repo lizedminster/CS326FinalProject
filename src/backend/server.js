@@ -78,23 +78,21 @@ async function updateGacha(response, id, newName, newImg) {
 async function deleteGacha(response, id) {
     try {
         const gacha = await db.loadGacha(id);
-        await console.log(gacha)
         response.writeHead(200, headerFields);
         response.write(`<h1>Gacha ${gacha._id} Deleted</h1>`);
-        response.end();
         db.removeGacha(id);
     } catch (err) {
         response.writeHead(404, headerFields);
         response.write(`<h1>Gacha ${id} Not Found</h1>`);
-        response.end();
     }
+    response.end();
 }
 
 async function basicServer(request, response) {
     const parsedUrl = url.parse(request.url, true);
     const options = parsedUrl.query;
-    console.log(options)
-    const pathname = parsedUrl.pathname;
+    console.log("options vv");
+    console.log(options);
     // Check if the request method and path are equal to the given method and path
     const isEqual = (method, path) =>
         request.method === method && request.url === path;
@@ -125,7 +123,7 @@ async function basicServer(request, response) {
           // Read the file from the src/client folder and send it back to the client
           const data = await fsp.readFile("src" + urlpath, "utf8");
           response.writeHead(200, { "Content-Type": getContentType(urlpath) });
-          response.write(data);
+          await response.write(data);
           response.end();
           return;
         } catch (err) {

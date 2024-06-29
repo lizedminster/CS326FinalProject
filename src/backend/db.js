@@ -22,5 +22,6 @@ export async function loadGacha(id) {
 
 //This function removes the gacha
 export async function removeGacha(id) {
-    db.remove(id);
+    const gacha = await db.get(id);
+    await db.remove(gacha);
   }
