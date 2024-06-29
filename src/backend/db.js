@@ -5,7 +5,7 @@ const db = new PouchDB("gacha");
 //This function takes in an Id, name, and Img, and then saves them in a gacha object
 export async function saveGacha(id, name, img) {
     console.log('MADE IT TO DB')
-    await db.put({ id: id, name, img});
+    await db.put({_id: id, name, img});
     console.log('MADE IT FROM DB')
 }
 

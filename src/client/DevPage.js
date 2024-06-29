@@ -12,7 +12,6 @@ const gachaImg = document.getElementById("gachaImg");
 const URL = "http://localhost:3260";
 
 async function createGacha() {
-    console.log("x")
     const id = gachaID.value;
     const name = gachaName.value;
     const img = gachaImg.value;
@@ -25,27 +24,74 @@ async function createGacha() {
     //Uncaught (in promise) 
     //TypeError: Failed to fetch
     // at HTMLButtonElement.createGacha (DevPage.js:28:30)
-    console.log("x2")
     const response = await fetch(`${URL}/create?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}&img=${encodeURIComponent(img)}`, {
         method: "POST"
     });
-    console.log("x3")
     const data = await response.text();
-    console.log("x4")
     gac.innerHTML = data;
 
     console.log("Gacha Created");
 }
 async function readGacha() {
 
-    //don't worry about these. I'll implement them once create is fixed.
+    const id = gachaID.value;
+    if (!id) {
+        alert("Gacha id is required!")
+        return;
+    }
+    //something about this does not work. This is the error:
+    //DevPage.js:28
+    //Uncaught (in promise) 
+    //TypeError: Failed to fetch
+    // at HTMLButtonElement.createGacha (DevPage.js:28:30)
+    const response = await fetch(`${URL}/read?id=${encodeURIComponent(id)}}`, {
+        method: "GET"
+    });
+    const data = await response.text();
+    gac.innerHTML = data;
+
+    console.log("Gacha Read");
 
 }
 async function updateGacha() {
+    const id = gachaID.value;
+    const name = gachaName.value;
+    const img = gachaImg.value;
+    if (!id || !name || !img) {
+        alert("Gacha name is required!")
+        return;
+    }
+    //something about this does not work. This is the error:
+    //DevPage.js:28
+    //Uncaught (in promise) 
+    //TypeError: Failed to fetch
+    // at HTMLButtonElement.createGacha (DevPage.js:28:30)
+    const response = await fetch(`${URL}/update?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}&img=${encodeURIComponent(img)}`, {
+        method: "PUT"
+    });
+    const data = await response.text();
+    gac.innerHTML = data;
 
+    console.log("Gacha Updated");
 }
 async function deleteGacha() {
+    const id = gachaID.value;
+    if (!id) {
+        alert("Gacha id is required!")
+        return;
+    }
+    //something about this does not work. This is the error:
+    //DevPage.js:28
+    //Uncaught (in promise) 
+    //TypeError: Failed to fetch
+    // at HTMLButtonElement.createGacha (DevPage.js:28:30)
+    const response = await fetch(`${URL}/delete?id=${encodeURIComponent(id)}}`, {
+        method: "DELETE"
+    });
+    const data = await response.text();
+    gac.innerHTML = data;
 
+    console.log("Gacha Deleted");
 }
 
 createBtn.addEventListener("click", createGacha);
