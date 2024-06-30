@@ -17,6 +17,20 @@ Endpoints:
 
 /delete: If you include the ID, you can delete the object at that ID. 200 is success, 404 is missing the object requested.
 
-/destroy: If you would like to empty the database, you can use this endpoint. You then have to restart the server, so do not destroy the database & then continue to try to add, delete, etc. 200 is success, 404 is missing the db requested.
+/destroy: If you would like to empty the database, you can use this endpoint. ***You then have to restart the server***, so do not destroy the database & then continue to try to add, delete, etc. 200 is success, 404 is missing the db requested.
 
 /random: If you would like to draw a random object from the database, this endpoint will allow you to do so. 200 is success, 400 is missing info, possibly because there were no gachas to draw.
+
+I chose to make gachas the thing stored in the database because this will allow artists to personalize the gatcha that they want to be in their game. If they find it motivating to try to earn their own types of pictures, then this would be a good feature. An alternative use of the gacha backend system would be using images of rewards. If you find it hard to study, you can add screenshots of text such as "Get to watch a movie" or "Get to take a bubble bath" or "Get to eat a whole package of strawberries". The options are endless. 
+
+In order to use this, you will need to have installed express & pouchdb.
+
+To get this code, you can clone the repository using github desktop (my upmost reccomendation) via the link.
+
+As of this version, there should be 9 gachas. 
+
+If you would like to personalize the sign in, you can change that in signIn.js (not signInJs.js)
+
+If you would like to personalize the questions, you can change that in trivia.js
+
+If you are the people grading my assignment, thank you for taking the time to read all the way up to here & I hope you enjoy my code & strategies. If you are someone who has no relation to 326, thank you for exploring this game! I hope it is helpful or fun to you in some way. It is very adjustable, so feel free to change the settings on the coins/payments/points etc. 

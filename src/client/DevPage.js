@@ -20,7 +20,9 @@ async function createGachaStart() {
         alert("Gacha name is required!")
         return;
     }
-    
+
+    console.log(`${URL}/create?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}&img=${encodeURIComponent(img)}`)
+
     const response = await fetch(`${URL}/create?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}&img=${encodeURIComponent(img)}`, {
         method: "POST"
     });
@@ -36,7 +38,9 @@ async function readGachaStart() {
         alert("Gacha id is required!")
         return;
     }
-    
+
+    console.log(`${URL}/read?id=${encodeURIComponent(id)}`)
+
     const response = await fetch(`${URL}/read?id=${encodeURIComponent(id)}`, {
         method: "GET"
     });
@@ -54,7 +58,9 @@ async function updateGachaStart() {
         alert("Gacha name is required!")
         return;
     }
-    
+
+    console.log(`${URL}/update?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}&img=${encodeURIComponent(img)}`);
+
     const response = await fetch(`${URL}/update?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}&img=${encodeURIComponent(img)}`, {
         method: "PUT"
     });
@@ -69,6 +75,8 @@ async function deleteGachaStart() {
         alert("Gacha id is required!");
         return;
     }
+
+    console.log(`${URL}/delete?id=${encodeURIComponent(id)}`);
 
     try {
         const response = await fetch(`${URL}/delete?id=${encodeURIComponent(id)}`, {
